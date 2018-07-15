@@ -18,6 +18,7 @@ class CreateReportsTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->text('filter')->nullable();
+            $table->text('input')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

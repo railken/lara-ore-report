@@ -23,6 +23,9 @@ class ReportFaker extends BaseFaker
         $bag = new Bag();
         $bag->set('name', $faker->name);
         $bag->set('filter', "name = '{{ name }}'");
+        $bag->set('input', [
+            'name' => 'string',
+        ]);
 
         return $bag;
     }

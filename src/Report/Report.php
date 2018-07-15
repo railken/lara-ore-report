@@ -19,6 +19,16 @@ class Report extends Model implements EntityContract
     protected $fillable = [
         'name',
         'filter',
+        'input',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'input'     => 'object',
     ];
 
     /**

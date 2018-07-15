@@ -30,6 +30,7 @@ class ReportsController extends RestConfigurableController
         'id',
         'name',
         'filter',
+        'input',
         'created_at',
         'updated_at',
     ];
@@ -42,5 +43,6 @@ class ReportsController extends RestConfigurableController
     public $fillable = [
         'name',
         'filter',
+        'input',
     ];
 }
