@@ -61,6 +61,6 @@ class FilterAttribute extends BaseAttribute
      */
     public function valid(EntityContract $entity, $value)
     {
-        return v::length(1, 255)->validate($value);
+        return v::length(1, 1024)->validate($value);
     }
 }
