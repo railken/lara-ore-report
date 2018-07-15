@@ -17,6 +17,7 @@ class CreateReportsTable extends Migration
         Schema::create(Config::get('ore.report.table'), function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
+            $table->text('filter')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

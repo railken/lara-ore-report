@@ -18,6 +18,7 @@ class Report extends Model implements EntityContract
      */
     protected $fillable = [
         'name',
+        'filter',
     ];
 
     /**

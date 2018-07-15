@@ -27,6 +27,7 @@ class ReportManager extends ModelManager
         Attributes\CreatedAt\CreatedAtAttribute::class,
         Attributes\UpdatedAt\UpdatedAtAttribute::class,
         Attributes\DeletedAt\DeletedAtAttribute::class,
+        Attributes\Filter\FilterAttribute::class,
     ];
 
     /**

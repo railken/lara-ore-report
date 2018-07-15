@@ -29,6 +29,7 @@ class ReportsController extends RestConfigurableController
     public $queryable = [
         'id',
         'name',
+        'filter',
         'created_at',
         'updated_at',
     ];
@@ -40,5 +41,6 @@ class ReportsController extends RestConfigurableController
      */
     public $fillable = [
         'name',
+        'filter',
     ];
 }
