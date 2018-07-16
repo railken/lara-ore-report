@@ -86,7 +86,7 @@ class ReportManager extends ModelManager
             return $result;
         }
 
-        dispatch(new GenerateReport($report, $data));
+        dispatch(new GenerateReport($report, $data, $this->getAgent()));
 
         return $result;
     }
