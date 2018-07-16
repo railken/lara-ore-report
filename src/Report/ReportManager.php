@@ -3,11 +3,10 @@
 namespace Railken\LaraOre\Report;
 
 use Illuminate\Support\Facades\Config;
-use Railken\LaraEye\Filter;
-use Railken\LaraOre\File\FileManager;
-use Railken\LaraOre\Template\TemplateManager;
+use Railken\LaraOre\Jobs\GenerateReport;
 use Railken\Laravel\Manager\Contracts\AgentContract;
 use Railken\Laravel\Manager\ModelManager;
+use Railken\Laravel\Manager\Result;
 use Railken\Laravel\Manager\Tokens;
 
 class ReportManager extends ModelManager
@@ -76,41 +75,19 @@ class ReportManager extends ModelManager
      *
      * @param Report $report
      * @param array  $data
-     * @param mixed  $user
+     *
+     * @return \Railken\Laravel\Manager\Contracts\ResultContract
      */
-    public function generate(Report $report, array $data = [], $user = null)
+    public function generate(Report $report, array $data = [])
     {
-        $tm = new TemplateManager();
+        $result = new Result();
 
-        $repository = new $report->repository();
-        $query = $repository->newQuery();
-
-        $filter = new Filter($repository->getTableName(), ['name']);
-        $filter->build($query, $tm->renderRaw('text/plain', $report->filter, $data));
-
-        $filename = tempnam('/tmp', '').'-'.time().'.csv';
-
-        $filename = sys_get_temp_dir().'/'.$report->id.'-'.$tm->renderRaw('text/plain', $report->filename, $data).'.csv';
-
-        $file = fopen($filename, 'w');
-
-        if (!$file) {
-            throw new \Exception();
+        if (!$result->ok()) {
+            return $result;
         }
 
-        $head = array_keys((array) $report->body);
-        $row = array_values((array) $report->body);
+        dispatch(new GenerateReport($report, $data));
 
-        fputcsv($file, $head);
-
-        $query->chunk(100, function ($resources) use ($file, $row, $tm) {
-            foreach ($resources as $resource) {
-                fputcsv($file, json_decode($tm->renderRaw('text/plain', (string) json_encode($row), ['resource' => $resource]), true));
-            }
-        });
-
-        $fm = new FileManager();
-        $result = $fm->uploadFileFromFilesystem($filename);
-        fclose($file);
+        return $result;
     }
 }

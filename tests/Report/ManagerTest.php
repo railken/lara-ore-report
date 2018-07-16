@@ -25,7 +25,7 @@ class ManagerTest extends BaseTest
         $this->commonTest($this->getManager(), ReportFaker::make()->parameters());
     }
 
-    public function testRequest()
+    public function testGenerate()
     {
         $manager = $this->getManager();
 
@@ -33,6 +33,7 @@ class ManagerTest extends BaseTest
         $this->assertEquals(1, $result->ok());
 
         $resource = $result->getResource();
-        $manager->generate($resource, ['name' => $resource->name], null);
+        $result = $manager->generate($resource, ['name' => $resource->name]);
+        $this->assertEquals(true, $result->ok());
     }
 }

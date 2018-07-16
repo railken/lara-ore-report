@@ -4,6 +4,7 @@ namespace Railken\LaraOre\Tests\Report;
 
 use Illuminate\Support\Facades\Config;
 use Railken\LaraOre\Report\ReportFaker;
+use Railken\LaraOre\Report\ReportManager;
 use Railken\LaraOre\Support\Testing\ApiTestableTrait;
 
 class ApiTest extends BaseTest
@@ -28,5 +29,17 @@ class ApiTest extends BaseTest
     public function testSuccessCommon()
     {
         $this->commonTest($this->getBaseUrl(), ReportFaker::make()->parameters());
+    }
+
+    public function testGenerate()
+    {
+        $manager = new ReportManager();
+
+        $result = $manager->create(ReportFaker::make()->parameters()->set('repository', \Railken\LaraOre\Tests\Report\Repositories\ReportRepository::class));
+        $this->assertEquals(1, $result->ok());
+        $resource = $result->getResource();
+
+        $response = $this->post($this->getBaseUrl() . "/" . $resource->id . "/generate", ['data' => ['name' => $resource->name]]);
+        $response->assertStatus(200);
     }
 }

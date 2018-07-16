@@ -48,6 +48,8 @@ class ReportServiceProvider extends ServiceProvider
             $router->put('/{id}', ['uses' => $controller.'@update']);
             $router->delete('/{id}', ['uses' => $controller.'@remove']);
             $router->get('/{id}', ['uses' => $controller.'@show']);
+
+            $router->post('/{id}/generate', ['uses' => $controller.'@generate']);
         });
     }
 }
