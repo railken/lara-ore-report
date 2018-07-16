@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Config;
 use Railken\Laravel\Manager\Contracts\EntityContract;
 
+/**
+ * @property string $name
+ * @property string $repository
+ * @property string $input
+ * @property string $filter
+ * @property string $body
+ * @property string $filename
+ */
 class Report extends Model implements EntityContract
 {
     use SoftDeletes;
@@ -18,8 +26,11 @@ class Report extends Model implements EntityContract
      */
     protected $fillable = [
         'name',
+        'repository',
         'filter',
         'input',
+        'filename',
+        'body',
     ];
 
     /**
@@ -29,6 +40,7 @@ class Report extends Model implements EntityContract
      */
     protected $casts = [
         'input'     => 'object',
+        'body'      => 'object',
     ];
 
     /**

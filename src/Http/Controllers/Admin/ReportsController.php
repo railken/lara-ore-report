@@ -29,8 +29,12 @@ class ReportsController extends RestConfigurableController
     public $queryable = [
         'id',
         'name',
+        'repository',
         'filter',
         'input',
+        'filetype',
+        'filename',
+        'body',
         'created_at',
         'updated_at',
     ];
@@ -42,7 +46,11 @@ class ReportsController extends RestConfigurableController
      */
     public $fillable = [
         'name',
+        'repository',
         'filter',
         'input',
+        'filetype',
+        'filename',
+        'body',
     ];
 }

@@ -8,7 +8,9 @@
         "railken/laravel-manager": "^3.0.3",
         "fzaninotto/faker": "^1.7",
         "railken/lara-ore-api": "dev-master",
-        "railken/lara-ore-support": "dev-master"
+        "railken/lara-ore-support": "dev-master",
+        "railken/lara-ore-template": "dev-master",
+        "railken/lara-ore-file": "dev-master"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10",

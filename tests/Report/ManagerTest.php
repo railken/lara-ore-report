@@ -24,4 +24,15 @@ class ManagerTest extends BaseTest
     {
         $this->commonTest($this->getManager(), ReportFaker::make()->parameters());
     }
+
+    public function testRequest()
+    {
+        $manager = $this->getManager();
+
+        $result = $manager->create(ReportFaker::make()->parameters()->set('repository', \Railken\LaraOre\Tests\Report\Repositories\ReportRepository::class));
+        $this->assertEquals(1, $result->ok());
+
+        $resource = $result->getResource();
+        $manager->generate($resource, ['name' => $resource->name], null);
+    }
 }

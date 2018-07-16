@@ -22,9 +22,15 @@ class ReportFaker extends BaseFaker
 
         $bag = new Bag();
         $bag->set('name', $faker->name);
+        $bag->set('repository', \Railken\LaraOre\Tests\Report\Repositories\ReportRepository::class);
         $bag->set('filter', "name = '{{ name }}'");
         $bag->set('input', [
             'name' => 'string',
+        ]);
+        $bag->set('filename', '{{ "now"|date("m/d/Y") }}.csv');
+        $bag->set('body', [
+            'name' => '{{ resource.name }}',
+            'flag' => 2,
         ]);
 
         return $bag;
