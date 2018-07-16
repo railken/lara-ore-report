@@ -90,6 +90,8 @@ class ReportManager extends ModelManager
 
         $filename = tempnam('/tmp', '').'-'.time().'.csv';
 
+        $filename = sys_get_temp_dir().'/'.$report->id.'-'.$tm->renderRaw('text/plain', $report->filename, $data).'.csv';
+
         $file = fopen($filename, 'w');
 
         if (!$file) {
@@ -101,9 +103,9 @@ class ReportManager extends ModelManager
 
         fputcsv($file, $head);
 
-        $query->chunk(100, function ($resources) use ($file, $report, $row, $tm) {
+        $query->chunk(100, function ($resources) use ($file, $row, $tm) {
             foreach ($resources as $resource) {
-                fputcsv($file, json_decode($tm->renderRaw('text/plain', json_encode($row), ['resource' => $resource]), true));
+                fputcsv($file, json_decode($tm->renderRaw('text/plain', (string) json_encode($row), ['resource' => $resource]), true));
             }
         });
 

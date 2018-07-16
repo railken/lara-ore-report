@@ -32,7 +32,6 @@ class ReportsController extends RestConfigurableController
         'repository',
         'filter',
         'input',
-        'filetype',
         'filename',
         'body',
         'created_at',
@@ -49,7 +48,6 @@ class ReportsController extends RestConfigurableController
         'repository',
         'filter',
         'input',
-        'filetype',
         'filename',
         'body',
     ];

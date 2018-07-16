@@ -27,7 +27,7 @@ class ReportFaker extends BaseFaker
         $bag->set('input', [
             'name' => 'string',
         ]);
-        $bag->set('filename', '{{ "now"|date("m/d/Y") }}.csv');
+        $bag->set('filename', 'users-{{ "now"|date("Ymd") }}');
         $bag->set('body', [
             'name' => '{{ resource.name }}',
             'flag' => 2,
