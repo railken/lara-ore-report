@@ -49,8 +49,10 @@ class GenerateReport implements ShouldQueue
         $repository = new $report->repository();
         $query = $repository->newQuery();
 
-        $filter = new Filter($repository->getTableName(), ['*']);
-        $filter->build($query, $tm->renderRaw('text/plain', $report->filter, $data));
+        if (!empty($report->filter)) {
+            $filter = new Filter($repository->getTableName(), ['*']);
+            $filter->build($query, $tm->renderRaw('text/plain', $report->filter, $data));
+        }
 
         $filename = tempnam('/tmp', '').'-'.time().'.csv';
 
