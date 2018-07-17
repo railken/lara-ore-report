@@ -9,6 +9,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Railken\LaraEye\Filter;
 use Railken\LaraOre\Events\ReportGenerated;
+use Railken\LaraOre\Events\ReportFailed;
+use Railken\LaraOre\Exceptions as Exceptions;
 use Railken\LaraOre\File\FileManager;
 use Railken\LaraOre\Report\Report;
 use Railken\LaraOre\Template\TemplateManager;
@@ -49,9 +51,14 @@ class GenerateReport implements ShouldQueue
         $repository = new $report->repository();
         $query = $repository->newQuery();
 
-        if (!empty($report->filter)) {
-            $filter = new Filter($repository->getTableName(), ['*']);
-            $filter->build($query, $tm->renderRaw('text/plain', $report->filter, $data));
+
+        try {
+            if (!empty($report->filter)) {
+                $filter = new Filter($repository->getTableName(), ['*']);
+                $filter->build($query, $tm->renderRaw('text/plain', $report->filter, $data));
+            }
+        } catch (\Railken\SQ\Exceptions\QuerySyntaxException $e) {
+            return event(new ReportFailed($report, $e, $this->agent));
         }
 
         $filename = tempnam('/tmp', '').'-'.time().'.csv';
@@ -69,11 +76,22 @@ class GenerateReport implements ShouldQueue
 
         fputcsv($file, $head);
 
-        $query->chunk(100, function ($resources) use ($file, $row, $tm) {
-            foreach ($resources as $resource) {
-                fputcsv($file, json_decode($tm->renderRaw('text/plain', (string) json_encode($row), ['resource' => $resource]), true));
-            }
-        });
+
+        try {
+            $query->chunk(100, function ($resources) use ($file, $row, $tm) {
+                foreach ($resources as $resource) {
+                    $value = json_decode($tm->renderRaw('text/plain', (string) json_encode($row), ['resource' => $resource]), true);
+
+                    if ($value === null) {
+                        throw new Exceptions\FormattingException(sprintf("Error while formatting resource #%s", $resource->id));
+                    }
+
+                    fputcsv($file, $value);
+                }
+            });
+        } catch (\Exception $e) {
+            return event(new ReportFailed($report, $e, $this->agent));
+        }
 
         $fm = new FileManager();
         $result = $fm->uploadFileFromFilesystem($filename, "reports");
