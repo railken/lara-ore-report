@@ -8,6 +8,7 @@ use Railken\Laravel\Manager\Contracts\AgentContract;
 use Railken\Laravel\Manager\ModelManager;
 use Railken\Laravel\Manager\Result;
 use Railken\Laravel\Manager\Tokens;
+use Illuminate\Support\Facades\Validator;
 
 class ReportManager extends ModelManager
 {
@@ -81,6 +82,20 @@ class ReportManager extends ModelManager
     public function generate(Report $report, array $data = [])
     {
         $result = new Result();
+
+        if (count((array)$report->input) !== 0) {
+            $validator = Validator::make($data, (array)$report->input);
+
+            $errors = collect();
+
+            foreach ($validator->errors()->getMessages() as $key => $error) {
+                $errors[] = new Exceptions\ReportInputException($key, $error[0], $data[$key]);
+            }
+
+
+            $result->addErrors($errors);
+        }
+
 
         if (!$result->ok()) {
             return $result;
