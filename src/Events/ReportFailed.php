@@ -12,7 +12,7 @@ class ReportFailed
     use SerializesModels;
 
     public $report;
-    public $exception;
+    public $error;
     public $agent;
 
     /**
@@ -25,7 +25,11 @@ class ReportFailed
     public function __construct(Report $report, Exception $exception, AgentContract $agent = null)
     {
         $this->report = $report;
-        $this->exception = $exception;
+        $this->error = (object) [
+            'class' => get_class($exception),
+            'message' => $exception->getMessage(),
+        ];
+
         $this->agent = $agent;
     }
 }

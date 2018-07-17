@@ -91,6 +91,8 @@ class GenerateReport implements ShouldQueue
             });
         } catch (FormattingException $e) {
             return event(new ReportFailed($report, $e, $this->agent));
+        } catch (\PDOException $e) {
+            return event(new ReportFailed($report, $e, $this->agent));
         }
 
         $fm = new FileManager();
