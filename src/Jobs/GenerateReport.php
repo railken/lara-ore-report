@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Railken\LaraEye\Filter;
 use Railken\LaraOre\Events\ReportGenerated;
 use Railken\LaraOre\Events\ReportFailed;
-use Railken\LaraOre\Exceptions as Exceptions;
+use Railken\LaraOre\Exceptions\FormattingException;
 use Railken\LaraOre\File\FileManager;
 use Railken\LaraOre\Report\Report;
 use Railken\LaraOre\Template\TemplateManager;
@@ -83,13 +83,13 @@ class GenerateReport implements ShouldQueue
                     $value = json_decode($tm->renderRaw('text/plain', (string) json_encode($row), ['resource' => $resource]), true);
 
                     if ($value === null) {
-                        throw new Exceptions\FormattingException(sprintf("Error while formatting resource #%s", $resource->id));
+                        throw new FormattingException(sprintf("Error while formatting resource #%s", $resource->id));
                     }
 
                     fputcsv($file, $value);
                 }
             });
-        } catch (\Exception $e) {
+        } catch (FormattingException $e) {
             return event(new ReportFailed($report, $e, $this->agent));
         }
 
