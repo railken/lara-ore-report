@@ -57,27 +57,23 @@ class GenerateReport implements ShouldQueue
                 $filter = new Filter($repository->getTableName(), ['*']);
                 $filter->build($query, $tm->renderRaw('text/plain', $report->filter, $data));
             }
-        } catch (\Railken\SQ\Exceptions\QuerySyntaxException $e) {
-            return event(new ReportFailed($report, $e, $this->agent));
-        }
+       
 
-        $filename = tempnam('/tmp', '').'-'.time().'.csv';
+            $filename = tempnam('/tmp', '').'-'.time().'.csv';
 
-        $filename = sys_get_temp_dir().'/'.$tm->renderRaw('text/plain', $report->filename, $data).'.csv';
+            $filename = sys_get_temp_dir().'/'.$tm->renderRaw('text/plain', $report->filename, $data).'.csv';
 
-        $file = fopen($filename, 'w');
+            $file = fopen($filename, 'w');
 
-        if (!$file) {
-            throw new \Exception();
-        }
+            if (!$file) {
+                throw new \Exception();
+            }
 
-        $head = array_keys((array) $report->body);
-        $row = array_values((array) $report->body);
+            $head = array_keys((array) $report->body);
+            $row = array_values((array) $report->body);
 
-        fputcsv($file, $head);
+            fputcsv($file, $head);
 
-
-        try {
             $query->chunk(100, function ($resources) use ($file, $row, $tm) {
                 foreach ($resources as $resource) {
                     $value = json_decode($tm->renderRaw('text/plain', (string) json_encode($row), ['resource' => $resource]), true);
@@ -89,10 +85,14 @@ class GenerateReport implements ShouldQueue
                     fputcsv($file, $value);
                 }
             });
-        } catch (FormattingException $e) {
+        } catch (FormattingException | \PDOException | \Railken\SQ\Exceptions\QuerySyntaxException $e) {
             return event(new ReportFailed($report, $e, $this->agent));
-        } catch (\PDOException $e) {
+        } catch (\Twig_Error $e) {
+
+            $e = new \Exception($e->getRawMessage(). " on line " .$e->getTemplateLine());
+
             return event(new ReportFailed($report, $e, $this->agent));
+
         }
 
         $fm = new FileManager();
