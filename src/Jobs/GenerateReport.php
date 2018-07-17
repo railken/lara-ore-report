@@ -76,8 +76,20 @@ class GenerateReport implements ShouldQueue
         });
 
         $fm = new FileManager();
-        $result = $fm->uploadFileFromFilesystem($filename);
+        $result = $fm->uploadFileFromFilesystem($filename, "reports");
         fclose($file);
+
+        $result = $fm->create([]);
+        $resource = $result->getResource();
+
+        $resource
+            ->addMedia($filename)
+            ->addCustomHeaders([
+                'ContentDisposition' => 'attachment; filename='.basename($filename).'',
+                'ContentType' => 'text/csv'
+            ])
+            ->toMediaCollection("report");
+
 
         event(new ReportGenerated($report, $result->getResource(), $this->agent));
     }
