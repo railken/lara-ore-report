@@ -63,7 +63,7 @@ class GenerateReport implements ShouldQueue
 
         $filename = tempnam('/tmp', '').'-'.time().'.csv';
 
-        $filename = sys_get_temp_dir().'/'.$report->id.'-'.$tm->renderRaw('text/plain', $report->filename, $data).'.csv';
+        $filename = sys_get_temp_dir().'/'.$tm->renderRaw('text/plain', $report->filename, $data).'.csv';
 
         $file = fopen($filename, 'w');
 
