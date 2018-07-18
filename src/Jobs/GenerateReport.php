@@ -72,16 +72,16 @@ class GenerateReport implements ShouldQueue
 
             fputcsv($file, $head);
 
-            $query->chunk(100, function ($resources) use ($file, $row, $tm) {
-                foreach ($resources as $resource) {
-                    $value = json_decode($tm->renderRaw('text/plain', (string) json_encode($row), ['resource' => $resource]), true);
+            $query->chunk(100, function ($resources) use ($file, $row, $tm, $repository) {
+                $repository->extract($resources, function ($resource, $data) use ($file, $row, $tm) {
+                    $value = json_decode($tm->renderRaw('text/plain', (string) json_encode($row), $data), true);
 
                     if ($value === null) {
                         throw new FormattingException(sprintf('Error while formatting resource #%s', $resource->id));
                     }
 
                     fputcsv($file, $value);
-                }
+                });
             });
         } catch (FormattingException | \PDOException | \Railken\SQ\Exceptions\QuerySyntaxException $e) {
             return event(new ReportFailed($report, $e, $this->agent));
