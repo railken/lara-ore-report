@@ -15,8 +15,8 @@ class ReportInputException extends ReportException
      * Construct.
      *
      * @param string $key
-     * @param mixed $message
-     * @param mixed $value
+     * @param mixed  $message
+     * @param mixed  $value
      */
     public function __construct($key, $message = null, $value = null)
     {

@@ -8,8 +8,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Railken\LaraEye\Filter;
-use Railken\LaraOre\Events\ReportGenerated;
 use Railken\LaraOre\Events\ReportFailed;
+use Railken\LaraOre\Events\ReportGenerated;
 use Railken\LaraOre\Exceptions\FormattingException;
 use Railken\LaraOre\File\FileManager;
 use Railken\LaraOre\Report\Report;
@@ -51,13 +51,11 @@ class GenerateReport implements ShouldQueue
         $repository = new $report->repository();
         $query = $repository->newQuery();
 
-
         try {
             if (!empty($report->filter)) {
                 $filter = new Filter($repository->getTableName(), ['*']);
                 $filter->build($query, $tm->renderRaw('text/plain', $report->filter, $data));
             }
-       
 
             $filename = tempnam('/tmp', '').'-'.time().'.csv';
 
@@ -79,7 +77,7 @@ class GenerateReport implements ShouldQueue
                     $value = json_decode($tm->renderRaw('text/plain', (string) json_encode($row), ['resource' => $resource]), true);
 
                     if ($value === null) {
-                        throw new FormattingException(sprintf("Error while formatting resource #%s", $resource->id));
+                        throw new FormattingException(sprintf('Error while formatting resource #%s', $resource->id));
                     }
 
                     fputcsv($file, $value);
@@ -88,15 +86,13 @@ class GenerateReport implements ShouldQueue
         } catch (FormattingException | \PDOException | \Railken\SQ\Exceptions\QuerySyntaxException $e) {
             return event(new ReportFailed($report, $e, $this->agent));
         } catch (\Twig_Error $e) {
-
-            $e = new \Exception($e->getRawMessage(). " on line " .$e->getTemplateLine());
+            $e = new \Exception($e->getRawMessage().' on line '.$e->getTemplateLine());
 
             return event(new ReportFailed($report, $e, $this->agent));
-
         }
 
         $fm = new FileManager();
-        $result = $fm->uploadFileFromFilesystem($filename, "reports");
+        $result = $fm->uploadFileFromFilesystem($filename, 'reports');
         fclose($file);
 
         $result = $fm->create([]);
@@ -106,10 +102,9 @@ class GenerateReport implements ShouldQueue
             ->addMedia($filename)
             ->addCustomHeaders([
                 'ContentDisposition' => 'attachment; filename='.basename($filename).'',
-                'ContentType' => 'text/csv'
+                'ContentType'        => 'text/csv',
             ])
-            ->toMediaCollection("report");
-
+            ->toMediaCollection('report');
 
         event(new ReportGenerated($report, $result->getResource(), $this->agent));
     }

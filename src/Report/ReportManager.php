@@ -3,12 +3,12 @@
 namespace Railken\LaraOre\Report;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Validator;
 use Railken\LaraOre\Jobs\GenerateReport;
 use Railken\Laravel\Manager\Contracts\AgentContract;
 use Railken\Laravel\Manager\ModelManager;
 use Railken\Laravel\Manager\Result;
 use Railken\Laravel\Manager\Tokens;
-use Illuminate\Support\Facades\Validator;
 
 class ReportManager extends ModelManager
 {
@@ -83,8 +83,8 @@ class ReportManager extends ModelManager
     {
         $result = new Result();
 
-        if (count((array)$report->input) !== 0) {
-            $validator = Validator::make($data, (array)$report->input);
+        if (count((array) $report->input) !== 0) {
+            $validator = Validator::make($data, (array) $report->input);
 
             $errors = collect();
 
@@ -92,10 +92,8 @@ class ReportManager extends ModelManager
                 $errors[] = new Exceptions\ReportInputException($key, $error[0], $data[$key]);
             }
 
-
             $result->addErrors($errors);
         }
-
 
         if (!$result->ok()) {
             return $result;
