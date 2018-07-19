@@ -50,7 +50,7 @@ class GenerateReport implements ShouldQueue
         $repository = $report->repository;
 
         try {
-            $query = $repository->newQuery($data);
+            $query = $repository->newInstanceQuery($data);
 
             $filename = tempnam('/tmp', '').'-'.time().'.csv';
 
