@@ -2,12 +2,12 @@
 
 namespace Railken\LaraOre\Tests\Report\Repositories;
 
-use Railken\LaraOre\Contracts\ReportRepositoryContract;
+use Railken\LaraOre\Contracts\RepositoryContract;
 use Railken\LaraOre\Report\ReportManager;
 use Illuminate\Support\Collection;
 use Closure;
 
-class ReportRepository implements ReportRepositoryContract
+class ReportRepository implements RepositoryContract
 {
     protected $manager;
     

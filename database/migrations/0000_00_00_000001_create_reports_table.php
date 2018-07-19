@@ -17,8 +17,8 @@ class CreateReportsTable extends Migration
         Schema::create(Config::get('ore.report.table'), function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
-            $table->string('repository');
-            $table->text('filter')->nullable();
+            $table->integer('repository_id')->unsigned()->nullable();
+            $table->foreign('repository_id')->references('id')->on(Config::get('ore.repository.table'));
             $table->text('input')->nullable();
             $table->string('filename');
             $table->text('body');

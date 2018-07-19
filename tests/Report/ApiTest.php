@@ -35,7 +35,7 @@ class ApiTest extends BaseTest
     {
         $manager = new ReportManager();
 
-        $result = $manager->create(ReportFaker::make()->parameters()->set('repository', \Railken\LaraOre\Tests\Report\Repositories\ReportRepository::class));
+        $result = $manager->create(ReportFaker::make()->parameters()->set('repository.class_name', \Railken\LaraOre\Tests\Report\Repositories\ReportRepository::class));
         $this->assertEquals(1, $result->ok());
         $resource = $result->getResource();
 

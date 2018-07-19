@@ -30,8 +30,7 @@ class ReportsController extends RestConfigurableController
     public $queryable = [
         'id',
         'name',
-        'repository',
-        'filter',
+        'repository_id',
         'input',
         'filename',
         'body',
@@ -47,7 +46,7 @@ class ReportsController extends RestConfigurableController
     public $fillable = [
         'name',
         'repository',
-        'filter',
+        'repository_id',
         'input',
         'filename',
         'body',

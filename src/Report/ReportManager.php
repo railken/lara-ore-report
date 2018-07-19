@@ -27,14 +27,13 @@ class ReportManager extends ModelManager
     protected $attributes = [
         Attributes\Id\IdAttribute::class,
         Attributes\Name\NameAttribute::class,
-        Attributes\Repository\RepositoryAttribute::class,
         Attributes\CreatedAt\CreatedAtAttribute::class,
         Attributes\UpdatedAt\UpdatedAtAttribute::class,
         Attributes\DeletedAt\DeletedAtAttribute::class,
-        Attributes\Filter\FilterAttribute::class,
         Attributes\Input\InputAttribute::class,
         Attributes\Filename\FilenameAttribute::class,
         Attributes\Body\BodyAttribute::class,
+        Attributes\RepositoryId\RepositoryIdAttribute::class,
     ];
 
     /**

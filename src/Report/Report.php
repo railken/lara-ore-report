@@ -5,15 +5,15 @@ namespace Railken\LaraOre\Report;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Config;
+use Railken\LaraOre\Repository\Repository;
 use Railken\Laravel\Manager\Contracts\EntityContract;
 
 /**
- * @property string $name
- * @property string $repository
- * @property string $input
- * @property string $filter
- * @property string $body
- * @property string $filename
+ * @property string     $name
+ * @property Repository $repository
+ * @property string     $input
+ * @property string     $body
+ * @property string     $filename
  */
 class Report extends Model implements EntityContract
 {
@@ -31,6 +31,7 @@ class Report extends Model implements EntityContract
         'input',
         'filename',
         'body',
+        'repository_id',
     ];
 
     /**
@@ -60,5 +61,13 @@ class Report extends Model implements EntityContract
         parent::__construct($attributes);
         $this->table = Config::get('ore.report.table');
         $this->fillable = array_merge($this->fillable, array_keys(Config::get('ore.report.attributes')));
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function repository()
+    {
+        return $this->belongsTo(Repository::class);
     }
 }

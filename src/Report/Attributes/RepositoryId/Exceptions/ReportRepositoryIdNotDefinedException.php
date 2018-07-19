@@ -1,24 +1,24 @@
 <?php
 
-namespace Railken\LaraOre\Report\Attributes\Repository\Exceptions;
+namespace Railken\LaraOre\Report\Attributes\RepositoryId\Exceptions;
 
 use Railken\LaraOre\Report\Exceptions\ReportAttributeException;
 
-class ReportRepositoryNotDefinedException extends ReportAttributeException
+class ReportRepositoryIdNotDefinedException extends ReportAttributeException
 {
     /**
      * The reason (attribute) for which this exception is thrown.
      *
      * @var string
      */
-    protected $attribute = 'repository';
+    protected $attribute = 'repository_id';
 
     /**
      * The code to identify the error.
      *
      * @var string
      */
-    protected $code = 'REPORT_REPOSITORY_NOT_DEFINED';
+    protected $code = 'REPORT_REPOSITORY_ID_NOT_DEFINED';
 
     /**
      * The message.

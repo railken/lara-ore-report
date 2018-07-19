@@ -7,7 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Railken\LaraEye\Filter;
 use Railken\LaraOre\Events\ReportFailed;
 use Railken\LaraOre\Events\ReportGenerated;
 use Railken\LaraOre\Exceptions\FormattingException;
@@ -48,14 +47,10 @@ class GenerateReport implements ShouldQueue
 
         $tm = new TemplateManager();
 
-        $repository = new $report->repository();
-        $query = $repository->newQuery();
+        $repository = $report->repository;
 
         try {
-            if (!empty($report->filter)) {
-                $filter = new Filter($repository->getTableName(), ['*']);
-                $filter->build($query, $tm->renderRaw('text/plain', $report->filter, $data));
-            }
+            $query = $repository->newQuery($data);
 
             $filename = tempnam('/tmp', '').'-'.time().'.csv';
 
@@ -92,7 +87,6 @@ class GenerateReport implements ShouldQueue
         }
 
         $fm = new FileManager();
-        $result = $fm->uploadFileFromFilesystem($filename, 'reports');
         fclose($file);
 
         $result = $fm->create([]);
