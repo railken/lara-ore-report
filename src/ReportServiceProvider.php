@@ -19,7 +19,7 @@ class ReportServiceProvider extends ServiceProvider
         $this->loadRoutes();
 
         config(['ore.permission.managers' => array_merge(Config::get('ore.permission.managers', []), [
-            //\Railken\LaraOre\Report\ReportManager::class,
+            \Railken\LaraOre\Report\ReportManager::class,
         ])]);
     }
 
